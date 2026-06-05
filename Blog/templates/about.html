@@ -1,30 +1,55 @@
 {% extends "layout.html" %}
 {% block body %}
 
-        <!-- Page Header-->
-        <header class="masthead" style="background-image: url('{{ url_for('static', filename= 'assets/img/about-bg.jpg') }} ')">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="page-heading">
-                            <h1>About Me</h1>
-                            <span class="subheading">This is what I do.</span>
-                        </div>
+<!-- Page Header - Modern Shifting Banner -->
+<header class="masthead hv-masthead-about"
+    style="background-image: url('{{ url_for('static', filename= 'assets/img/about-bg.jpg') }}')">
+    <div class="container position-relative px-4 px-lg-5 hv-hero-container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="page-heading hv-page-heading text-center">
+                    <h1>About Me</h1>
+                    <span class="subheading">This is what I do.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content - Two-Column Dashboard-like about block -->
+<main class="mb-4 hv-main-content">
+    <div class="container px-4 px-lg-5 hv-about-grid-container">
+        <div class="row gx-4 gx-lg-5 hv-about-row">
+            <!-- Left Column: Highlights or visual summary -->
+            <div class="col-lg-4 mb-4">
+                <div class="hv-about-sidebar-card text-center">
+                    <h3 class="hv-about-sidebar-name">Nexus Blogger</h3>
+                    <div class="hv-about-tagline text-uppercase mb-4">Digital Visionary</div>
+
+                    <!-- Highlight Paragraph 1 -->
+                    <div class="hv-about-highlight-box text-start">
+                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe nostrum ullam
+                            eveniet pariatur voluptates odit, fuga atque ea nobis sit soluta odio, adipisci quas
+                            excepturi maxime quae totam ducimus consectetur?</p>
                     </div>
                 </div>
             </div>
-        </header>
-        <!-- Main Content-->
-        <main class="mb-4">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe nostrum ullam eveniet pariatur voluptates odit, fuga atque ea nobis sit soluta odio, adipisci quas excepturi maxime quae totam ducimus consectetur?</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius praesentium recusandae illo eaque architecto error, repellendus iusto reprehenderit, doloribus, minus sunt. Numquam at quae voluptatum in officia voluptas voluptatibus, minus!</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequuntur magnam, excepturi aliquid ex itaque esse est vero natus quae optio aperiam soluta voluptatibus corporis atque iste neque sit tempora!</p>
+
+            <!-- Right Column: Main Story -->
+            <div class="col-lg-8">
+                <div class="hv-about-main-card">
+                    <div class="hv-about-card-body">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius praesentium recusandae illo
+                            eaque architecto error, repellendus iusto reprehenderit, doloribus, minus sunt. Numquam at
+                            quae voluptatum in officia voluptas voluptatibus, minus!</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut consequuntur magnam, excepturi
+                            aliquid ex itaque esse est vero natus quae optio aperiam soluta voluptatibus corporis atque
+                            iste neque sit tempora!</p>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+    </div>
+</main>
 
 {% endblock %}

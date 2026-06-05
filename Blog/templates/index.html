@@ -1,80 +1,152 @@
 {% extends "layout.html" %}
 {% block body %}
 
-        <!-- Page Header-->
-        <header class="masthead" style="background-image: url('{{ url_for('static', filename= 'assets/img/home-bg.png') }}')">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="site-heading">
-                            <h1>Nexus</h1>
-                            <span class="subheading">Code • Data • Innovation</span>
-                        </div>
+<!-- Page Header - Modern Split Hero Banner -->
+<header class="masthead hv-masthead"
+    style="background-image: url('{{ url_for('static', filename= 'assets/img/home-bg.png') }}')">
+    <div class="container position-relative px-4 px-lg-5 hv-hero-container">
+        <div class="row align-items-center hv-hero-row">
+            <!-- Left Column: Branding and Site Heading -->
+            <div class="col-lg-6 mb-5 mb-lg-0 hv-hero-branding">
+                <div class="site-heading hv-site-heading">
+                    <h1 class="hv-hero-title">Nexus</h1>
+                    <span class="subheading hv-hero-subheading">Code • Data • Innovation</span>
+                    <div class="hv-hero-action mt-4">
+                        <a href="#main-content" class="btn btn-primary hv-hero-btn text-uppercase">Explore Articles
+                            ↓</a>
                     </div>
                 </div>
             </div>
-        </header>
-        <!-- Main Content-->
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">Man must explore, and this is exploration at its greatest</h2>
-                            <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
-                        </a>
-                        <p class="post-meta">
-                            Posted by
-                            <a href="#!">Nexus Tech</a>
-                            on September 24, 2023
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="post.html"><h2 class="post-title">I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.</h2></a>
-                        <p class="post-meta">
-                            Posted by
-                            <a href="#!">Nexus Tech</a>
-                            on September 18, 2023
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">Science has not yet mastered prophecy</h2>
-                            <h3 class="post-subtitle">We predict too much for the next year and yet far too little for the next ten.</h3>
-                        </a>
-                        <p class="post-meta">
-                            Posted by
-                            <a href="#!">Nexus Tech</a>
-                            on June 05, 2026
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">Failure is not an option</h2>
-                            <h3 class="post-subtitle">Many say exploration is part of our destiny, but it’s actually our duty to future generations.</h3>
-                        </a>
-                        <p class="post-meta">
-                            Posted by
-                            <a href="#!">Nexus Tech</a>
-                            on June 8, 2026
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
-                    <!-- Pager-->
-                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
+
+            <!-- Right Column: Glassmorphic Featured Post Showcase -->
+            <div class="col-lg-6 hv-hero-featured">
+                <div class="hv-featured-badge text-uppercase" style="color: whitesmoke !important">★ Featured Article
+                </div>
+                <!-- Post preview 1 moved here as the featured post -->
+                <div class="post-preview hv-post-card-featured">
+                    <a href="post.html" class="hv-card-link" style="color: whitesmoke !important">
+                        <h2 class="post-title hv-card-title">Man must explore, and this is exploration at its greatest
+                        </h2>
+                        <h3 class="post-subtitle hv-card-subtitle">Problems look mighty small from 150 miles up</h3>
+                    </a>
+                    <p class="post-meta hv-card-meta" style="color: whitesmoke !important">
+                        Posted by
+                        <a href="#!" class="hv-meta-author">Nexus Tech</a>
+                        on September 24, 2023
+                    </p>
                 </div>
             </div>
         </div>
-        
+    </div>
+</header>
+
+<!-- Main Content Layout Grid -->
+<div id="main-content" class="container px-4 px-lg-5 hv-main-content">
+    <div class="row gx-5 hv-content-row">
+        <!-- Left Main Column: Post Feed -->
+        <div class="col-lg-8 hv-post-feed">
+            <div class="hv-feed-header mb-4">
+                <h2 class="hv-section-title">Latest Updates</h2>
+            </div>
+
+            <!-- Post preview 2 -->
+            <div class="post-preview hv-post-card">
+                <a href="post.html" class="hv-card-link">
+                    <h2 class="post-title hv-card-title">I believe every human has a finite number of heartbeats. I
+                        don't intend to waste any of mine.</h2>
+                </a>
+                <p class="post-meta hv-card-meta">
+                    Posted by
+                    <a href="#!" class="hv-meta-author">Nexus Tech</a>
+                    on September 18, 2023
+                </p>
+            </div>
+            <!-- Divider-->
+            <hr class="my-4" />
+
+            <!-- Post preview 3 -->
+            <div class="post-preview hv-post-card">
+                <a href="post.html" class="hv-card-link">
+                    <h2 class="post-title hv-card-title">Science has not yet mastered prophecy</h2>
+                    <h3 class="post-subtitle hv-card-subtitle">We predict too much for the next year and yet far too
+                        little for the next ten.</h3>
+                </a>
+                <p class="post-meta hv-card-meta">
+                    Posted by
+                    <a href="#!" class="hv-meta-author">Nexus Tech</a>
+                    on June 05, 2026
+                </p>
+            </div>
+            <!-- Divider-->
+            <hr class="my-4" />
+
+            <!-- Post preview 4 -->
+            <div class="post-preview hv-post-card">
+                <a href="post.html" class="hv-card-link">
+                    <h2 class="post-title hv-card-title">Failure is not an option</h2>
+                    <h3 class="post-subtitle hv-card-subtitle">Many say exploration is part of our destiny, but it’s
+                        actually our duty to future generations.</h3>
+                </a>
+                <p class="post-meta hv-card-meta">
+                    Posted by
+                    <a href="#!" class="hv-meta-author">Nexus Tech</a>
+                    on June 8, 2026
+                </p>
+            </div>
+            <!-- Divider-->
+            <hr class="my-4" />
+
+            <!-- Pager-->
+            <div class="d-flex justify-content-start mb-4 hv-pager-container">
+                <a class="btn btn-primary text-uppercase hv-btn-pager" href="#!">Older Posts →</a>
+            </div>
+        </div>
+
+        <!-- Right Side Column: Dashboard Sidebar widgets -->
+        <div class="col-lg-4 hv-sidebar-column">
+            <div class="hv-sidebar-sticky">
+
+                <!-- Sidebar Widget 1: Creator Bio Card -->
+                <div class="hv-sidebar-card hv-sidebar-author-card mb-4 text-center">
+                    <h4 class="hv-sidebar-card-title">Nexus Tech</h4>
+                    <p class="hv-sidebar-card-desc">Sharing modern tech insights, data science stories, and digital
+                        future innovations.</p>
+                    <div class="hv-sidebar-socials mt-3">
+                        <a href="#!" class="hv-sidebar-social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#!" class="hv-sidebar-social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+                <!-- Sidebar Widget 2: Trending Categories Cloud -->
+                <div class="hv-sidebar-card hv-sidebar-tags-card mb-4">
+                    <h4 class="hv-sidebar-card-title mb-3">Trending Topics</h4>
+                    <div class="hv-tags-cloud">
+                        <span class="hv-tag-badge">#Development</span>
+                        <span class="hv-tag-badge">#SpaceExploration</span>
+                        <span class="hv-tag-badge">#FutureTech</span>
+                        <span class="hv-tag-badge">#DataScience</span>
+                        <span class="hv-tag-badge">#WebDesign</span>
+                    </div>
+                </div>
+
+                <!-- Sidebar Widget 3: Premium Newsletter Box -->
+                <div class="hv-sidebar-card hv-sidebar-newsletter-card text-center">
+                    <div class="hv-newsletter-icon mb-3">
+                        <i class="far fa-envelope-open"></i>
+                    </div>
+                    <h4 class="hv-sidebar-card-title">Join Nexus Tech</h4>
+                    <p class="hv-sidebar-card-desc mb-3">Get the latest articles sent straight to your screen.</p>
+                    <form class="hv-newsletter-form" onsubmit="return false;">
+                        <input type="email" placeholder="Your email address..."
+                            class="form-control hv-newsletter-input mb-3" required />
+                        <button type="submit"
+                            class="btn btn-primary w-100 hv-btn-newsletter text-uppercase">Subscribe</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
