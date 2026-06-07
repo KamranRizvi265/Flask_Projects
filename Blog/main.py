@@ -1,9 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
+import json
+
+with open("config.json", "r") as c:
+    params = json.load(c)["params"]
+
+local_server = params["local_server"]
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:@localhost/nexus"
+
+if(local_server):
+    app.config["SQLALCHEMY_DATABASE_URI"] = params["local_uri"]
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = params["prod_uri"]
+
 db = SQLAlchemy(app)
 
 class Contacts(db.Model):
@@ -16,15 +27,15 @@ class Contacts(db.Model):
 
 @app.route("/")
 def home_default():
-    return render_template('index.html')
+    return render_template('index.html', params=params)
 
 @app.route("/index.html")
 def home_nav():
-    return render_template('index.html')
+    return render_template('index.html', params=params)
 
 @app.route("/about.html")
 def about():
-    return render_template('about.html')
+    return render_template('about.html', params=params)
 
 @app.route("/contact.html", methods= ['GET', 'POST'])
 def contact():
@@ -40,13 +51,13 @@ def contact():
         db.session.commit()
 
         # Render the template directly to pass the success variable
-        return render_template('contact.html', success=True)
+        return render_template('contact.html', success=True, params=params)
 
-    return render_template('contact.html')
+    return render_template('contact.html', params=params)
 
 @app.route("/post.html")
 def post():
-    return render_template('post.html')
+    return render_template('post.html', params=params)
 
 if __name__ == '__main__':
     app.run(debug=True)
