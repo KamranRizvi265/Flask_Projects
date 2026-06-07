@@ -44,6 +44,18 @@ class Contacts(db.Model):
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=True, default=lambda: datetime.now(timezone.utc))
 
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    sub_title = db.Column(db.String(255), nullable=True)
+    slug = db.Column(db.String(255), nullable=False)
+    author = db.Column(db.String(100), nullable=False)
+    excerpt = db.Column(db.String(500), nullable=True)
+    content = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, nullable=True, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, nullable=True, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
 @app.route("/")
 def home_default():
     return render_template('index.html', params=params)
@@ -81,9 +93,12 @@ def contact():
 
     return render_template('contact.html', params=params)
 
-@app.route("/post.html")
-def post():
-    return render_template('post.html', params=params)
+# Routing Posts
+@app.route("/post/<string:post_slug>", methods=['GET'])
+def post_route(post_slug):
+    post = Posts.query.filter_by(slug=post_slug).first_or_404()
+
+    return render_template('post.html', params=params, post=post)
 
 if __name__ == '__main__':
     app.run(debug=True)
