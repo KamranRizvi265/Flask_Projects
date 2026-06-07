@@ -2,6 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
 import json
+from dotenv import load_dotenv
+from flask_mail import Mail
+import os
+
+# Loading env variables
+load_dotenv()
+
+GMAIL_USERNAME = os.getenv("GMAIL_USERNAME")
+GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")
 
 with open("config.json", "r") as c:
     params = json.load(c)["params"]
@@ -9,6 +18,16 @@ with open("config.json", "r") as c:
 local_server = params["local_server"]
 
 app = Flask(__name__)
+
+# Connecting with smtp server
+app.config.update(
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = 465,
+    MAIL_USE_SSL = True,
+    MAIL_USERNAME = GMAIL_USERNAME,
+    MAIL_PASSWORD = GMAIL_PASSWORD
+)
+mail = Mail(app)
 
 if(local_server):
     app.config["SQLALCHEMY_DATABASE_URI"] = params["local_uri"]
@@ -49,6 +68,13 @@ def contact():
         entry= Contacts(name=name, phone=phone, email=email, message=message)
         db.session.add(entry)
         db.session.commit()
+
+        # Sending mail
+        mail.send_message('New message from Blog',
+                          sender=email,
+                          recipients=[GMAIL_USERNAME],
+                          body = message + '\n' + name + '\n' + phone
+                          )
 
         # Render the template directly to pass the success variable
         return render_template('contact.html', success=True, params=params)
