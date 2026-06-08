@@ -105,7 +105,7 @@ def post_route(post_slug):
     return render_template('post.html', params=params, post=post)
 
 # Dashboard
-@app.route("/dashboard")
+@app.route("/dashboard", methods= ['GET', 'POST'])
 def dashboard():
     return render_template('login.html', params=params)
 
