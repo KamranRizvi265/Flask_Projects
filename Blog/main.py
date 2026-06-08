@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
 import json
@@ -20,6 +20,8 @@ with open("config.json", "r") as c:
 local_server = params["local_server"]
 
 app = Flask(__name__)
+
+app.secret_key = os.getenv("SECRET_KEY")
 
 # Connecting with smtp server
 app.config.update(
@@ -109,14 +111,25 @@ def post_route(post_slug):
 # Dashboard
 @app.route("/dashboard", methods= ['GET', 'POST'])
 def dashboard():
+    # 1. Check if the user is ALREADY logged in
+    if 'user' in session and session['user'] == ADMIN_EMAIL:
+        # User is logged in! Show them the dashboard.
+        return "Welcome to the Admin Dashboard! You are logged in."
+    
     if request.method == 'POST':
-        email = request.form.get(email)
-        password = request.form.get(password)
+        email = request.form.get('email')
+        password = request.form.get('password')
         if(email == ADMIN_EMAIL and password == ADMIN_PASSWORD):
-            # Set the session variable
-            pass
-    else:
-        return render_template('login.html', params=params)
+            # 2. Set the session variable
+            session['user'] = email
+            # Redirect back to the dashboard via a fresh GET request
+            return redirect('/dashboard')
+        else:
+            # Pass an error message to the template!
+            return render_template('login.html', params=params, error="Invalid email or password. Please try again.")
+
+    # 3. If it's a GET request and they aren't logged in, show the login page
+    return render_template('login.html', params=params)
 
 if __name__ == '__main__':
     app.run(debug=True)
