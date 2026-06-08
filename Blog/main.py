@@ -13,6 +13,7 @@ GMAIL_USERNAME = os.getenv("GMAIL_USERNAME")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 with open("config.json", "r") as c:
     params = json.load(c)["params"]
@@ -113,8 +114,9 @@ def post_route(post_slug):
 def dashboard():
     # 1. Check if the user is ALREADY logged in
     if 'user' in session and session['user'] == ADMIN_EMAIL:
-        # User is logged in! Show them the dashboard.
-        return "Welcome to the Admin Dashboard! You are logged in."
+        posts = Posts.query.all()
+        # Render the new admin dashboard template!
+        return render_template('admin.html', params=params, posts=posts)
     
     if request.method == 'POST':
         email = request.form.get('email')
