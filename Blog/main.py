@@ -104,5 +104,10 @@ def post_route(post_slug):
 
     return render_template('post.html', params=params, post=post)
 
+# Dashboard
+@app.route("/dashboard")
+def dashboard():
+    return render_template('login.html', params=params)
+
 if __name__ == '__main__':
     app.run(debug=True)
