@@ -19,7 +19,7 @@
 
 <!-- Page Header-->
 <header class="masthead hv-masthead-post"
-    style="background-image: url('{{ url_for('static', filename=post.image if post.image else 'assets/img/home-bg.png') }}')">
+    style="background-image: url('{{ url_for("static", filename="assets/img/" + post.image) if post.image else url_for("static", filename="assets/img/home-bg.png") }}')">
     <div class="container position-relative px-4 px-lg-5 hv-hero-container">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
@@ -60,14 +60,6 @@
             <div class="col-lg-9 hv-article-main-card">
                 <div class="hv-article-card-body">
                     {{post.content | safe}}
-
-                    <p class="hv-article-credits text-muted mt-5">
-                        Placeholder text by
-                        <a href="http://spaceipsum.com/" class="hv-credit-link">Space Ipsum</a>
-                        &middot; Images by
-                        <a href="https://www.flickr.com/photos/nasacommons/" class="hv-credit-link">NASA on The
-                            Commons</a>
-                    </p>
                 </div>
             </div>
 

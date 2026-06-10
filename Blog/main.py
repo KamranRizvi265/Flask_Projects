@@ -5,6 +5,7 @@ import json
 from dotenv import load_dotenv
 from flask_mail import Mail
 import os
+from werkzeug.utils import secure_filename
 
 # Loading env variables
 load_dotenv()
@@ -23,6 +24,7 @@ local_server = params["local_server"]
 app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
+app.config['UPLOAD_FOLDER'] = params["upload_location"]
 
 # Connecting with smtp server
 app.config.update(
@@ -152,11 +154,25 @@ def post_edit(id):
             slug= request.form.get('slug')
             author= request.form.get('author')
             content= request.form.get('content')
-            image= request.form.get('image')
+
+            # Catch the uploaded Header Image
+            image_file = request.files.get('image')
+            image_name = None
+
+            # If the user actually selected a new file to upload
+            if image_file and image_file.filename != '':
+                image_name = secure_filename(image_file.filename)
+                # Save it
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], image_name)
+                image_file.save(filepath)
+
+            # If we are editing an existing post and DID NOT upload a new image, keep the old one!
+            if id != '0' and not image_name:
+                image_name = post.image
 
             # Create a NEW post
             if id=='0':
-                entry= Posts(title=title, sub_title=sub_title, slug=slug, content=content, author=author, image=image)
+                entry= Posts(title=title, sub_title=sub_title, slug=slug, content=content, author=author, image=image_name)
                 db.session.add(entry)
                 db.session.commit()
             else:
@@ -166,7 +182,7 @@ def post_edit(id):
                 post.slug = slug
                 post.author = author
                 post.content = content
-                post.image = image
+                post.image = image_name
                 db.session.commit()
 
             # Redirect back to the dashboard after saving!
