@@ -1,60 +1,164 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<div class="container mt-5 pt-5 mb-5 hv-main-content">
+<div class="ambient-glow-wrapper">
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+</div>
+
+<div class="container-fluid dashboard-container px-4 px-lg-5">
     
-    <!-- Dashboard Header Area -->
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-6">
-            <h1 class="h2 mb-0">Admin Dashboard</h1>
-            <p class="text-muted mt-1">Manage your tech blog content.</p>
-        </div>
-        <div class="col-md-6 text-md-end">
-            <!-- We will build these routes later! -->
-            <a href="/edit/0" class="btn btn-success shadow-sm"><i class="fas fa-plus"></i> Add New Post</a>
-            <a href="/logout" class="btn btn-outline-danger shadow-sm ms-2"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <!-- Dashboard Header Panel -->
+    <div class="glass-panel dashboard-header mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-7 dashboard-title-group">
+                <h1>
+                    <i class="fas fa-tachometer-alt me-2" style="color: var(--hv-primary);"></i>
+                    Admin Dashboard
+                </h1>
+                <p>Manage your tech blog content with ease.</p>
+            </div>
+            <div class="col-md-5 text-md-end d-flex gap-3 justify-content-md-end flex-wrap">
+                <a href="/edit/0" class="btn-gradient-success">
+                    <i class="fas fa-plus-circle"></i>New Post
+                </a>
+                <a href="/logout" class="btn-outline-danger-custom">
+                    <i class="fas fa-sign-out-alt"></i>Logout
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Posts Table Card -->
-    <div class="card shadow-sm border-0 bg-light">
-        <div class="card-body p-4">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Date</th>
-                            <th scope="col" class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Loop through all posts from the database -->
-                        {% for post in posts %}
-                        <tr>
-                            <td>{{ post.id }}</td>
-                            <td>
-                                <strong>{{ post.title }}</strong><br>
-                                <small class="text-muted">{{ post.slug }}</small>
-                            </td>
-                            <td>{{ post.updated_at.strftime('%Y-%m-%d') }}</td>
-                            <td class="text-end">
-                                <a href="/edit/{{ post.id }}" class="btn btn-sm btn-primary">Edit</a>
-                                <a href="/delete/{{ post.id }}" class="btn btn-sm btn-danger ms-1">Delete</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        
-                        <!-- Empty state if no posts exist -->
-                        {% if posts|length == 0 %}
-                        <tr>
-                            <td colspan="4" class="text-center py-4 text-muted">No posts found. Start writing!</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="glass-panel stat-card">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="stat-title">Total Posts</p>
+                        <h3 class="stat-value" id="postsCount">{{ posts|length }}</h3>
+                    </div>
+                    <div class="stat-icon-wrapper bg-primary-tint">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-panel stat-card">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="stat-title">Blog Status</p>
+                        <h3 class="stat-value text-success" style="color: #28a745 !important;">Active</h3>
+                    </div>
+                    <div class="stat-icon-wrapper bg-success-tint">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-panel stat-card">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="stat-title">Last Updated</p>
+                        <h5 class="stat-value" style="font-size: 1.5rem; line-height: 1.8rem; margin: 0;">
+                            {% if posts|length > 0 %}
+                                {{ posts[0].updated_at.strftime('%b %d, %Y') }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </h5>
+                    </div>
+                    <div class="stat-icon-wrapper bg-info-tint">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card Wrapper -->
+    <div class="glass-panel table-card">
+        <div class="table-card-header">
+            <div class="d-flex align-items-center gap-3">
+                <h5 class="table-header-title">
+                    <i class="fas fa-list text-primary"></i>Blog Posts
+                </h5>
+                <span class="table-header-badge" id="totalPostsBadge">{{ posts|length }}</span>
+            </div>
+            
+            <!-- Live Search Bar -->
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="dashboardSearch" class="search-input" placeholder="Search posts by title or slug..." autocomplete="off">
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table align-middle custom-table" id="postsTable">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 80px;"><i class="fas fa-hashtag me-2"></i>ID</th>
+                        <th scope="col"><i class="fas fa-heading me-2"></i>Title & Slug</th>
+                        <th scope="col" style="width: 220px;"><i class="fas fa-calendar-alt me-2"></i>Date Published</th>
+                        <th scope="col" class="text-end" style="width: 240px;"><i class="fas fa-cog me-2"></i>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr class="table-row-hover post-row" data-title="{{ post.title|lower }}" data-slug="{{ post.slug|lower }}">
+                        <td>
+                            <span class="badge-id">#{{ post.id }}</span>
+                        </td>
+                        <td>
+                            <div class="post-title-cell">{{ post.title }}</div>
+                            <a href="/post/{{ post.slug }}" target="_blank" class="post-slug-link" title="View live post">
+                                <i class="fas fa-link"></i>{{ post.slug }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge-date">
+                                <i class="far fa-clock"></i>{{ post.updated_at.strftime('%b %d, %Y') }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a href="/edit/{{ post.id }}" class="btn-action-edit" title="Edit this post">
+                                <i class="fas fa-edit"></i>Edit
+                            </a>
+                            <a href="/delete/{{ post.id }}" class="btn-action-delete" title="Delete this post" onclick="return confirm('Are you sure you want to permanently delete this post? This action cannot be undone.');">
+                                <i class="fas fa-trash"></i>Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    <!-- Dynamic empty state when no posts match search queries -->
+                    <tr id="emptySearchState" style="display: none;">
+                        <td colspan="4">
+                            <div class="search-empty-state">
+                                <i class="fas fa-search-minus"></i>
+                                <h5>No matching posts found</h5>
+                                <p>Try adjusting your search terms or keywords.</p>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Empty state if no posts exist in database -->
+                    {% if posts|length == 0 %}
+                    <tr id="emptyDbState">
+                        <td colspan="4">
+                            <div class="search-empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h5>Your blog is empty</h5>
+                                <p>Click the "New Post" button to publish your first article!</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -64,35 +168,478 @@
 
 {% block scripts %}
 <style>
+  /* Variables local to dashboard or overrides */
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-blur: blur(16px) saturate(180%);
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    --card-shadow-hover: 0 20px 45px rgba(0, 191, 166, 0.15);
+  }
+
+  /* Force dashboard navbar styling on mainNav */
+  #mainNav {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(20px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: var(--hv-shadow-sm) !important;
+  }
   #mainNav .navbar-brand {
     -webkit-text-fill-color: var(--hv-text) !important;
     color: var(--hv-text) !important;
   }
-
   #mainNav .navbar-nav>li.nav-item>a.nav-link {
     color: rgba(0, 0, 0, 0.95) !important;
   }
-
   #mainNav .navbar-nav>li.nav-item>a.nav-link:hover {
     color: var(--hv-primary) !important;
   }
-
   @media (min-width: 992px) {
     #mainNav {
       background: rgba(255, 255, 255, 0.8) !important;
-      backdrop-filter: blur(20px) saturate(190%);
-      -webkit-backdrop-filter: blur(20px) saturate(190%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
-      box-shadow: var(--hv-shadow-sm);
+      backdrop-filter: blur(20px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
     }
-
     #mainNav .navbar-brand {
       -webkit-text-fill-color: var(--hv-text) !important;
     }
+  }
 
-    #mainNav .navbar-nav>li.nav-item>a.nav-link {
-      color: rgba(0, 0, 0, 0.95) !important;
-    }
+  /* Ambient floating blobs for background */
+  .ambient-glow-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+    mix-blend-mode: multiply;
+    animation: drift 25s infinite ease-in-out alternate;
+  }
+  .blob-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--hv-primary);
+    top: 10%;
+    left: -10%;
+    animation-duration: 20s;
+  }
+  .blob-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--hv-accent);
+    bottom: -10%;
+    right: -10%;
+    animation-duration: 28s;
+  }
+  .blob-3 {
+    width: 250px;
+    height: 250px;
+    background: var(--hv-coral);
+    top: 60%;
+    left: 50%;
+    animation-duration: 22s;
+  }
+  @keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, -50px) scale(1.1); }
+    100% { transform: translate(-30px, 30px) scale(0.9); }
+  }
+
+  /* Main Wrapper */
+  .dashboard-container {
+    padding-top: 130px;
+    padding-bottom: 80px;
+    animation: fadeIn 0.8s var(--hv-ease-smooth);
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Glassmorphic Panel Styling */
+  .glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--hv-radius);
+    box-shadow: var(--card-shadow);
+    transition: transform var(--hv-duration-med) var(--hv-ease-elastic),
+                box-shadow var(--hv-duration-med) var(--hv-ease-smooth),
+                border-color var(--hv-duration-med) var(--hv-ease-smooth);
+  }
+
+  /* Header Section */
+  .dashboard-header {
+    background: rgba(255, 255, 255, 0.65);
+    border-radius: var(--hv-radius);
+    padding: 30px;
+  }
+  .dashboard-title-group h1 {
+    font-size: 2.25rem !important;
+    font-weight: 850 !important;
+    background: linear-gradient(135deg, var(--hv-text) 30%, var(--hv-primary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .dashboard-title-group p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--hv-text-soft);
+  }
+
+  /* Button Styling */
+  .btn-gradient-success {
+    background: linear-gradient(135deg, var(--hv-primary) 0%, var(--hv-primary-dark) 100%);
+    color: #fff !important;
+    border: none;
+    padding: 12px 24px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: var(--hv-radius-sm);
+    box-shadow: 0 4px 15px rgba(0, 191, 166, 0.25);
+    transition: all var(--hv-duration-fast) var(--hv-ease-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .btn-gradient-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 191, 166, 0.4);
+    background: linear-gradient(135deg, var(--hv-primary-light) 0%, var(--hv-primary) 100%);
+  }
+  .btn-gradient-success:active {
+    transform: translateY(0);
+  }
+
+  .btn-outline-danger-custom {
+    border: 2px solid var(--hv-coral);
+    color: var(--hv-coral) !important;
+    background: transparent;
+    padding: 10px 22px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: var(--hv-radius-sm);
+    transition: all var(--hv-duration-fast) var(--hv-ease-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .btn-outline-danger-custom:hover {
+    background: var(--hv-coral);
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* Stats Cards */
+  .stat-card {
+    padding: 24px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: rgba(0, 191, 166, 0.25);
+  }
+  .stat-icon-wrapper {
+    width: 54px;
+    height: 54px;
+    border-radius: var(--hv-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    transition: all var(--hv-duration-med) var(--hv-ease-elastic);
+  }
+  .stat-card:hover .stat-icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+  }
+  .stat-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--hv-text-soft);
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    color: var(--hv-text);
+  }
+
+  /* Colors matching design system */
+  .bg-primary-tint {
+    background: rgba(0, 191, 166, 0.08);
+    color: var(--hv-primary-dark);
+  }
+  .bg-success-tint {
+    background: rgba(40, 167, 69, 0.08);
+    color: #28a745;
+  }
+  .bg-info-tint {
+    background: rgba(23, 162, 184, 0.08);
+    color: #17a2b8;
+  }
+
+  /* Search & Table Card Styling */
+  .table-card {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.65);
+    border-radius: var(--hv-radius);
+    overflow: hidden;
+  }
+  .table-card-header {
+    padding: 25px 30px;
+    border-bottom: 1px solid var(--hv-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .table-header-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+  }
+  .table-header-badge {
+    background: var(--hv-primary);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: var(--hv-radius-pill);
+  }
+
+  /* Live Search Input */
+  .search-wrapper {
+    position: relative;
+    max-width: 300px;
+    width: 100%;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px 16px 10px 40px;
+    border: 2px solid var(--hv-border);
+    border-radius: var(--hv-radius-sm);
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all var(--hv-duration-fast) var(--hv-ease-smooth);
+    font-family: 'Inter', sans-serif;
+  }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--hv-primary);
+    box-shadow: 0 0 0 4px rgba(0, 191, 166, 0.1);
+    background: #fff;
+  }
+  .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--hv-text-soft);
+    font-size: 0.9rem;
+    pointer-events: none;
+  }
+
+  /* Table Style */
+  .custom-table {
+    margin-bottom: 0;
+  }
+  .custom-table th {
+    padding: 16px 24px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--hv-text-soft);
+    background: rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid var(--hv-border);
+  }
+  .custom-table td {
+    padding: 18px 24px;
+    vertical-align: middle;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(232, 226, 217, 0.4);
+    transition: background var(--hv-duration-fast) var(--hv-ease-smooth);
+  }
+  .table-row-hover:hover td {
+    background: rgba(0, 191, 166, 0.03);
+  }
+
+  /* Badges */
+  .badge-id {
+    background: rgba(45, 52, 70, 0.05);
+    color: var(--hv-text);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+  .badge-date {
+    background: rgba(255, 179, 71, 0.08);
+    color: var(--hv-accent-dark);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.825rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .post-slug-link {
+    font-size: 0.8rem;
+    color: var(--hv-text-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    text-decoration: none !important;
+    border-bottom: none !important;
+  }
+  .post-title-cell {
+    font-weight: 700;
+    color: var(--hv-text);
+  }
+
+  /* Action Buttons */
+  .btn-action-edit {
+    background: rgba(0, 191, 166, 0.08);
+    color: var(--hv-primary-dark) !important;
+    border: 1px solid rgba(0, 191, 166, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all var(--hv-duration-fast) var(--hv-ease-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .btn-action-edit:hover {
+    background: var(--hv-primary);
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0, 191, 166, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .btn-action-delete {
+    background: rgba(255, 107, 107, 0.08);
+    color: var(--hv-coral) !important;
+    border: 1px solid rgba(255, 107, 107, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all var(--hv-duration-fast) var(--hv-ease-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .btn-action-delete:hover {
+    background: var(--hv-coral);
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
+    transform: translateY(-1px);
+  }
+
+  /* Table search empty state */
+  .search-empty-state {
+    text-align: center;
+    padding: 60px 40px;
+  }
+  .search-empty-state i {
+    font-size: 3rem;
+    color: var(--hv-text-soft);
+    opacity: 0.4;
+    margin-bottom: 15px;
+  }
+  .search-empty-state h5 {
+    font-weight: 700;
+    color: var(--hv-text);
+    margin: 0;
+  }
+  .search-empty-state p {
+    margin: 8px 0 0 0;
+    font-size: 0.9rem;
+    color: var(--hv-text-soft);
   }
 </style>
+
+<script>
+  // Add dashboard navbar class
+  document.addEventListener('DOMContentLoaded', () => {
+    const mainNav = document.getElementById('mainNav');
+    if (mainNav) {
+      mainNav.classList.add('navbar-dashboard');
+    }
+
+    // Live search functionality
+    const searchInput = document.getElementById('dashboardSearch');
+    const tableRows = document.querySelectorAll('.post-row');
+    const emptyState = document.getElementById('emptySearchState');
+    const badge = document.getElementById('totalPostsBadge');
+    
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        tableRows.forEach(row => {
+          const title = row.getAttribute('data-title') || '';
+          const slug = row.getAttribute('data-slug') || '';
+          
+          if (title.includes(query) || slug.includes(query)) {
+            row.style.display = '';
+            visibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
+        // Update badge count
+        if (badge) {
+          badge.textContent = visibleCount;
+        }
+
+        // Show/hide search empty state
+        if (visibleCount === 0 && query !== '') {
+          if (emptyState) emptyState.style.display = '';
+        } else {
+          if (emptyState) emptyState.style.display = 'none';
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}
