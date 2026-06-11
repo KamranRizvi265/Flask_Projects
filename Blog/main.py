@@ -194,6 +194,18 @@ def post_edit(id):
     # 4. If they aren't logged in, redirect them away
     return redirect('/dashboard')
 
+# Delete Post
+@app.route("/delete/<string:id>", methods= ['GET', 'POST'])
+def post_delete(id):
+    # Check if the user is ALREADY logged in
+    if 'user' in session and session['user'] == ADMIN_EMAIL:
+        post = Posts.query.filter_by(id=id).first()
+        db.session.delete(post)
+        db.session.commit()
+        return redirect('/dashboard')
+    # If they aren't logged in, redirect them away
+    return redirect('/dashboard')
+
 # Logout
 @app.route("/logout")
 def logout():
