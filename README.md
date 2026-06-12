@@ -44,7 +44,8 @@ Create a MySQL database (default name: `nexus`) and set the connection string in
         "local_uri": "mysql+pymysql://root:@localhost/nexus",
         "prod_uri": null,
         "fb_url": "https://www.facebook.com/...",
-        "github_url": "https://github.com/..."
+        "github_url": "https://github.com/...",
+        "no_of_posts" : 3
     }
 }
 ```
@@ -83,6 +84,9 @@ Flask_Projects/
 │   │   ├── layout.html      # Shared layout (nav, footer)
 │   │   ├── index.html       # Home
 │   │   ├── about.html       # About
+│   │   ├── login.html       # Login
+│   │   ├── admin.html       # Admin Dashboard
+│   │   ├── edit.html        # Edit posts
 │   │   ├── post.html        # Sample post
 │   │   └── contact.html     # Contact form
 │   └── static/
@@ -99,7 +103,6 @@ Flask_Projects/
 | `/` | GET | Home |
 | `/index.html` | GET | Home |
 | `/about.html` | GET | About |
-| `/post.html` | GET | Sample post |
 | `/contact.html` | GET, POST | Contact (POST saves to DB and sends email) |
 
 ## Tech stack
