@@ -69,8 +69,14 @@
             <hr class="my-4" />
 
             <!-- Pager-->
-            <div class="d-flex justify-content-start mb-4 hv-pager-container">
-                <a class="btn btn-primary text-uppercase hv-btn-pager" href="#!">Older Posts →</a>
+            <div class="d-flex justify-content-between mb-4 mt-5">
+            <a class="btn btn-primary text-uppercase {% if prev == '#' %}disabled{% endif %}" href="{{ prev }}">
+                &larr; Prev
+            </a>
+            
+            <a class="btn btn-primary text-uppercase {% if next == '#' %}disabled{% endif %}" href="{{ next }}">
+                Next &rarr;
+            </a>
             </div>
         </div>
 
